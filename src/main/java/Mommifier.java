@@ -15,19 +15,34 @@ public class Mommifier {
     }
 
     public String dealWithVowels(String args) {
-        String[] argChars = args.split("");
+        char[] chars = args.toCharArray();
+        double vowelCount = 0.0;
+        int continuousVowel = 0;
 
-        double vowelCount = Arrays.stream(argChars)
-                .filter(singleChar -> {
-                    if (vowels.get(singleChar.charAt(0)) != null) {
-                        return true;
-                    }
-                    return false;
-                })
-                .count();
+        StringBuffer result = new StringBuffer();
 
-        if (vowelCount/(double)argChars.length > 0.3) {
-            return null;
+        for (int i = 0; i < chars.length; i++) {
+
+            if (vowels.get(chars[i]) != null) {
+                vowelCount++;
+                continuousVowel++;
+                if (i == chars.length-1 && continuousVowel > 1) {
+                    result.append(chars[i]);
+                    result.append("mommy");
+                    break;
+                }
+            }else {
+                if (continuousVowel > 1) {
+                    result.append("mommy");
+                }
+                continuousVowel = 0;
+            }
+
+            result.append(chars[i]);
+        }
+
+        if (vowelCount/(double)chars.length > 0.3) {
+            return result.toString();
         }
 
         return args;
